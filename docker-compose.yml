@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  test:
+    build: .
+    init: true
+    command: index.test.js
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/mocha/.android
+    environment:
+      - ANDROID_HOST=host.docker.internal
+      - WAIT_FOR_HOSTS=host.docker.internal:5555
+      - ANDROID_SERIAL
+    volumes:
+      - .:/opt:ro
