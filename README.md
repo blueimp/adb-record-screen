@@ -55,7 +55,8 @@ const defaultOptions = {
   bugreport: undefined,   // Set to `true` to add additional info to the video
   size: undefined,        // WIDTHxHEIGHT, defaults to native device resolution
   bitRate: undefined,     // Bits per second, default value is 4000000 (4Mbps)
-  timeLimit: undefined    // Seconds, default and maximum value is 180 (3 mins)
+  timeLimit: undefined,   // Seconds, default and maximum value is 180 (3 mins)
+  pullDelay: 200          // Milliseconds, delay before pulling the video file
 }
 ```
 

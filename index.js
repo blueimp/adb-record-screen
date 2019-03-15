@@ -74,7 +74,7 @@ function buildScreenRecordArgs (fileName, options) {
  * @returns {ScreenRecording}
  */
 function recordScreen (fileName, options) {
-  const opts = Object.assign({ port: 5555 }, options)
+  const opts = Object.assign({ port: 5555, pullDelay: 200 }, options)
   const fileID = crypto.randomBytes(16).toString('hex')
   const deviceFileName = `/sdcard/Movies/${fileID}.mp4`
   const adbArgs = buildADBArgs(opts)
@@ -88,11 +88,11 @@ function recordScreen (fileName, options) {
       if (error && !error.killed) return reject(error)
       // Combine the output data:
       if (connectOutput) stdout = connectOutput + stdout
-      // Adding a delay before resolving, as pulling the video file directly
-      // after terminating the recording process leads to corrupted files:
+      // Add a delay before resolving, as pulling the video file directly after
+      // terminating the recording process leads to corrupted files:
       setTimeout(function () {
         resolve({ stdout, stderr })
-      }, 100)
+      }, opts.pullDelay)
     })
   }
   function stop () {
