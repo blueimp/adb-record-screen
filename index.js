@@ -79,15 +79,15 @@ function recordScreen (fileName, options) {
   const deviceFileName = `/sdcard/Movies/${fileID}.mp4`
   const adbArgs = buildADBArgs(opts)
   const args = adbArgs.concat(buildScreenRecordArgs(deviceFileName, opts))
-  if (opts.hostname) {
-    execFileSync('adb', ['connect', `${opts.hostname}:${opts.port}`])
-  }
+  let connectOutput
   let recordingProcess
   function resolveRecordingProcess (resolve, reject) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
     recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
       recordingProcess = null
       if (error && !error.killed) return reject(error)
+      // Combine the output data:
+      if (connectOutput) stdout = connectOutput + stdout
       // Adding a delay before resolving, as pulling the video file directly
       // after terminating the recording process leads to corrupted files:
       setTimeout(function () {
@@ -123,6 +123,18 @@ function recordScreen (fileName, options) {
         stderr: result.stderr + nextResult.stderr
       }
     })
+  }
+  if (opts.hostname) {
+    // Connect to a device via TCP/IP:
+    try {
+      connectOutput = execFileSync(
+        'adb',
+        ['connect', `${opts.hostname}:${opts.port}`],
+        { stdio: 'pipe' } // Make stderr available on the error object
+      ).toString()
+    } catch (error) {
+      return { promise: Promise.reject(error), stop }
+    }
   }
   const promise = new Promise(resolveRecordingProcess)
     .then(pullFile)
