@@ -57,7 +57,9 @@ describe('screen recording', function () {
   })
 
   it('uses default options', async function () {
-    const recording = recordScreen(videoFile)
+    const recording = recordScreen(videoFile, {
+      waitTimeout: 0
+    })
     const cmd = await recording.promise.catch(error => error.cmd)
     assert.strictEqual(
       cmd.replace(/\w+\.mp4$/, 'video.mp4'),
@@ -67,6 +69,7 @@ describe('screen recording', function () {
 
   it('handles option: serial', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       serial: 'banana'
     })
     const cmd = await recording.promise.catch(error => error.cmd)
@@ -78,6 +81,7 @@ describe('screen recording', function () {
 
   it('handles option: transportID', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       transportID: 'banana'
     })
     const cmd = await recording.promise.catch(error => error.cmd)
@@ -89,6 +93,7 @@ describe('screen recording', function () {
 
   it('handles option: bugreport', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       bugreport: true
     })
     const cmd = await recording.promise.catch(error => error.cmd)
@@ -100,6 +105,7 @@ describe('screen recording', function () {
 
   it('handles option: size', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       size: '1x1'
     })
     const cmd = await recording.promise.catch(error => error.cmd)
@@ -111,6 +117,7 @@ describe('screen recording', function () {
 
   it('handles option: bitRate', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       bitRate: 400
     })
     const cmd = await recording.promise.catch(error => error.cmd)
@@ -122,6 +129,7 @@ describe('screen recording', function () {
 
   it('handles option: timeLimit', async function () {
     const recording = recordScreen(videoFile, {
+      waitTimeout: 0,
       timeLimit: 9
     })
     const cmd = await recording.promise.catch(error => error.cmd)

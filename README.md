@@ -52,6 +52,7 @@ const defaultOptions = {
   transportID: undefined, // Use device with given transport ID
   hostname: undefined,    // Android device hostname
   port: 5555,             // Android device port
+  waitTimeout: 5000,      // Device wait timeout (ms), set to 0 to disable wait
   bugreport: undefined,   // Set to `true` to add additional info to the video
   size: undefined,        // WIDTHxHEIGHT, defaults to native device resolution
   bitRate: undefined,     // Bits per second, default value is 4000000 (4Mbps)
