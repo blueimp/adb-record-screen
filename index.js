@@ -1,5 +1,3 @@
-'use strict'
-
 /*
  * Screen recording function using Android Debug Bridge (adb).
  *
@@ -10,6 +8,9 @@
  * https://opensource.org/licenses/MIT
  */
 
+// @ts-check
+'use strict'
+
 const { execFile, execFileSync } = require('child_process')
 const crypto = require('crypto')
 const util = require('util')
@@ -18,7 +19,9 @@ const execFilePromise = util.promisify(execFile)
 /**
  * Builds arguments for an ADB call.
  * @param {Object} options ADB options
- * @returns {Array}
+ * @param {string} [options.serial] Use device with given serial
+ * @param {string} [options.transportID] Use device with given transport ID
+ * @returns {Array<string>}
  */
 function buildADBArgs (options) {
   const args = []
@@ -37,7 +40,11 @@ function buildADBArgs (options) {
  * Builds arguments for the screenrecord call.
  * @param {string} fileName Local file name
  * @param {Object} options Screen recording options
- * @returns {Array}
+ * @param {boolean} [options.bugreport] If `true` adds additional info to video
+ * @param {string} [options.size] WIDTHxHEIGHT, defaults to device resolution
+ * @param {number} [options.bitRate=4000000] Bits per second, default is 4Mbps
+ * @param {number} [options.timeLimit=180] Time limit (s), maximum is 180
+ * @returns {Array<string>}
  */
 function buildScreenRecordArgs (fileName, options) {
   const args = ['shell', 'screenrecord', '--verbose']
@@ -51,27 +58,47 @@ function buildScreenRecordArgs (fileName, options) {
   }
   if (options.bitRate) {
     // Bits per second, default value is 4000000 (4Mbps)
-    args.push('--bit-rate', options.bitRate)
+    args.push('--bit-rate', String(options.bitRate))
   }
   if (options.timeLimit) {
     // Seconds, default and maximum value is 180 (3 mins)
-    args.push('--time-limit', options.timeLimit)
+    args.push('--time-limit', String(options.timeLimit))
   }
   args.push(fileName)
   return args
 }
 
 /**
- * @typedef {Object} ScreenRecording
- * @property {Promise} promise Promise object for the active screen recording
+ * @typedef {Object} Result
+ * @property {string} stdout Screen recording standard output
+ * @property {string} stderr Screen recording error output
+ */
+
+/**
+ * @typedef {Object} Recording
+ * @property {Promise<Result>} promise Promise for the active screen recording
  * @property {function} stop Function to stop the screen recording
+ */
+
+/**
+ * @typedef {Object} Options Screen recording options
+ * @property {string} [serial] Use device with given serial
+ * @property {string} [transportID] Use device with given transport ID
+ * @property {string} [hostname] Android device hostname
+ * @property {number} [port=5555] Android device port
+ * @property {number} [waitTimeout=5000] Device wait timeout (ms)
+ * @property {boolean} [bugreport] If `true` adds additional info to the video
+ * @property {string} [size] WIDTHxHEIGHT, defaults to native device resolution
+ * @property {number} [bitRate=4000000] Bits per second, default is 4Mbps
+ * @property {number} [timeLimit=180] Time limit (s), maximum is 180 (3 mins)
+ * @property {number} [pullDelay=200] Delay (ms) before pulling the video file
  */
 
 /**
  * Starts a screen recording via adb shell screenrecord.
  * @param {string} fileName Output file name
- * @param {Object} [options] Screen recording options
- * @returns {ScreenRecording}
+ * @param {Options} [options] Screen recording options
+ * @returns {Recording}
  */
 function recordScreen (fileName, options) {
   const opts = Object.assign(
@@ -93,6 +120,7 @@ function recordScreen (fileName, options) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
     recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
       recordingProcess = null
+      // @ts-ignore Error interface does not expose killed property
       if (error && !error.killed) return reject(error)
       // Combine the output data:
       if (waitForDeviceOutput) stdout = waitForDeviceOutput + stdout

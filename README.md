@@ -55,9 +55,9 @@ const defaultOptions = {
   waitTimeout: 5000,      // Device wait timeout (ms), set to 0 to disable wait
   bugreport: undefined,   // Set to `true` to add additional info to the video
   size: undefined,        // WIDTHxHEIGHT, defaults to native device resolution
-  bitRate: undefined,     // Bits per second, default value is 4000000 (4Mbps)
-  timeLimit: undefined,   // Seconds, default and maximum value is 180 (3 mins)
-  pullDelay: 200          // Milliseconds, delay before pulling the video file
+  bitRate: 4000000,       // Bits per second, default is 4Mbps
+  timeLimit: 180,         // Time limit (s), maximum is 180 (3 mins)
+  pullDelay: 200          // Delay (ms) before pulling the video file
 }
 ```
 
