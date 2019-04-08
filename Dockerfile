@@ -10,7 +10,7 @@ RUN apk --no-cache add \
     android-tools@edgetesting \
   && npm install -g \
     npm@latest \
-    mocha@6.0.2 \
+    mocha@6.1.1 \
   # Clean up obsolete files:
   && rm -rf \
     /tmp/* \
