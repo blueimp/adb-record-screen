@@ -7,6 +7,7 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
+- [Testing](#testing)
 - [License](#license)
 - [Author](#author)
 
@@ -60,6 +61,18 @@ const defaultOptions = {
   pullDelay: 200          // Delay (ms) before pulling the video file
 }
 ```
+
+## Testing
+1. Start [Docker](https://docs.docker.com/).
+2. Start [Android Emulator](https://developer.android.com/studio/run/emulator).
+3. Install development dependencies:
+   ```sh
+   npm install
+   ```
+4. Run the tests:
+   ```sh
+   npm test
+   ```
 
 ## License
 Released under the [MIT license](https://opensource.org/licenses/MIT).
