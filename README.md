@@ -1,7 +1,10 @@
 # adb record screen
+
 > Screen recording function using
 > [Android Debug Bridge](https://developer.android.com/studio/command-line/adb)
 > (`adb`).
+
+## Contents
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -12,11 +15,13 @@
 - [Author](#author)
 
 ## Requirements
+
 This is a thin wrapper around
 [adb](https://developer.android.com/studio/command-line/adb) and has no other
 dependencies.
 
 ## Installation
+
 ```sh
 npm install adb-record-screen
 ```
@@ -49,20 +54,21 @@ setTimeout(() => recording.stop(), 5000)
 
 ```js
 const defaultOptions = {
-  serial: undefined,      // Use device with given serial
+  serial: undefined, // Use device with given serial
   transportID: undefined, // Use device with given transport ID
-  hostname: undefined,    // Android device hostname
-  port: 5555,             // Android device port
-  waitTimeout: 5000,      // Device wait timeout (ms), set to 0 to disable wait
-  bugreport: undefined,   // Set to `true` to add additional info to the video
-  size: undefined,        // WIDTHxHEIGHT, defaults to native device resolution
-  bitRate: 4000000,       // Bits per second, default is 4Mbps
-  timeLimit: 180,         // Time limit (s), maximum is 180 (3 mins)
-  pullDelay: 200          // Delay (ms) before pulling the video file
+  hostname: undefined, // Android device hostname
+  port: 5555, // Android device port
+  waitTimeout: 5000, // Device wait timeout (ms), set to 0 to disable wait
+  bugreport: undefined, // Set to `true` to add additional info to the video
+  size: undefined, // WIDTHxHEIGHT, defaults to native device resolution
+  bitRate: 4000000, // Bits per second, default is 4Mbps
+  timeLimit: 180, // Time limit (s), maximum is 180 (3 mins)
+  pullDelay: 200 // Delay (ms) before pulling the video file
 }
 ```
 
 ## Testing
+
 1. Start [Docker](https://docs.docker.com/).
 2. Start [Android Emulator](https://developer.android.com/studio/run/emulator).
 3. Install development dependencies:
@@ -75,7 +81,9 @@ const defaultOptions = {
    ```
 
 ## License
+
 Released under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Author
+
 [Sebastian Tschan](https://blueimp.net/)
