@@ -18,7 +18,7 @@ const execFilePromise = util.promisify(execFile)
 
 /**
  * Builds arguments for an ADB call.
- * @param {Object} options ADB options
+ * @param {object} options ADB options
  * @param {string} [options.serial] Use device with given serial
  * @param {string} [options.transportID] Use device with given transport ID
  * @returns {Array<string>}
@@ -39,7 +39,7 @@ function buildADBArgs (options) {
 /**
  * Builds arguments for the screenrecord call.
  * @param {string} fileName Local file name
- * @param {Object} options Screen recording options
+ * @param {object} options Screen recording options
  * @param {boolean} [options.bugreport] If `true` adds additional info to video
  * @param {string} [options.size] WIDTHxHEIGHT, defaults to device resolution
  * @param {number} [options.bitRate=4000000] Bits per second, default is 4Mbps
@@ -69,19 +69,19 @@ function buildScreenRecordArgs (fileName, options) {
 }
 
 /**
- * @typedef {Object} Result
+ * @typedef {object} Result
  * @property {string} stdout Screen recording standard output
  * @property {string} stderr Screen recording error output
  */
 
 /**
- * @typedef {Object} Recording
+ * @typedef {object} Recording
  * @property {Promise<Result>} promise Promise for the active screen recording
- * @property {function} stop Function to stop the screen recording
+ * @property {Function} stop Function to stop the screen recording
  */
 
 /**
- * @typedef {Object} Options Screen recording options
+ * @typedef {object} Options Screen recording options
  * @property {string} [serial] Use device with given serial
  * @property {string} [transportID] Use device with given transport ID
  * @property {string} [hostname] Android device hostname
