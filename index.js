@@ -8,7 +8,6 @@
  * https://opensource.org/licenses/MIT
  */
 
-// @ts-check
 'use strict'
 
 const { execFile, execFileSync } = require('child_process')
