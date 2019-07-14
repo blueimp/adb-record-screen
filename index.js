@@ -131,13 +131,15 @@ function recordScreen (fileName, options) {
       recordingProcess = null
       // @ts-ignore Error interface does not expose killed property
       if (error && !error.killed) return reject(error)
-      // Combine the output data:
-      if (waitForDeviceOutput) stdout = waitForDeviceOutput + stdout
-      if (connectOutput) stdout = connectOutput + stdout
+      const result = {
+        // Combine the output data:
+        stdout: [connectOutput, waitForDeviceOutput, stdout].join(''),
+        stderr
+      }
       // Add a delay before resolving, as pulling the video file directly after
       // terminating the recording process leads to corrupted files:
       setTimeout(function () {
-        resolve({ stdout, stderr })
+        resolve(result)
       }, opts.pullDelay)
     })
   }
