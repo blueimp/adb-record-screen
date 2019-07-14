@@ -18,6 +18,7 @@ const execFilePromise = util.promisify(execFile)
 
 /**
  * Builds arguments for an ADB call.
+ *
  * @param {object} options ADB options
  * @param {string} [options.serial] Use device with given serial
  * @param {string} [options.transportID] Use device with given transport ID
@@ -38,6 +39,7 @@ function buildADBArgs (options) {
 
 /**
  * Builds arguments for the screenrecord call.
+ *
  * @param {string} fileName Local file name
  * @param {object} options Screen recording options
  * @param {boolean} [options.bugreport] If `true` adds additional info to video
@@ -96,6 +98,7 @@ function buildScreenRecordArgs (fileName, options) {
 
 /**
  * Starts a screen recording via adb shell screenrecord.
+ *
  * @param {string} fileName Output file name
  * @param {Options} [options] Screen recording options
  * @returns {Recording}
