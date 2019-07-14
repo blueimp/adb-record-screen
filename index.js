@@ -116,7 +116,7 @@ function recordScreen (fileName, options) {
   let connectOutput
   let waitForDeviceOutput
   let recordingProcess
-  function resolveRecordingProcess (resolve, reject) {
+  function recordingExecutor (resolve, reject) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
     recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
       recordingProcess = null
@@ -183,9 +183,7 @@ function recordScreen (fileName, options) {
       return { promise: Promise.reject(error), stop }
     }
   }
-  const promise = new Promise(resolveRecordingProcess)
-    .then(pullFile)
-    .then(deleteFile)
+  const promise = new Promise(recordingExecutor).then(pullFile).then(deleteFile)
   return { promise, stop }
 }
 
