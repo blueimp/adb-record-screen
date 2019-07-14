@@ -12,13 +12,13 @@ const mochaTimeout = 15000
 const mochaSlow = 10000
 
 const videoFile = '/tmp/test.mp4'
-const recordingLength = 2000
+const recordingDuration = 2000
 
 function checkVideoIntegrity (videoFile) {
   return execFile('ffmpeg', ['-v', 'error', '-i', videoFile, '-f', 'null', '-'])
 }
 
-async function getVideoLength (videoFile) {
+async function getVideoDuration (videoFile) {
   const result = await execFile('ffprobe', [
     '-v',
     'error',
@@ -146,10 +146,10 @@ describe('screen recording', function () {
     const recording = recordScreen(videoFile, {
       hostname: process.env.ANDROID_HOST
     })
-    setTimeout(() => recording.stop(), recordingLength + 500)
+    setTimeout(() => recording.stop(), recordingDuration + 500)
     // Start some activities, as without screen changes the video will be empty:
     setTimeout(openChrome, 0)
-    setTimeout(showHomeScreen, recordingLength / 2)
+    setTimeout(showHomeScreen, recordingDuration / 2)
     const result = await recording.promise
     assert.strictEqual(result.stderr, '')
     const lines = result.stdout.split('\n')
@@ -163,13 +163,13 @@ describe('screen recording', function () {
       'stdout contains broadcasted intent'
     )
     await checkVideoIntegrity(videoFile)
-    const videoLength = await getVideoLength(videoFile)
-    const expectedLength = recordingLength / 1000
-    if (!(videoLength >= expectedLength)) {
+    const videoDuration = await getVideoDuration(videoFile)
+    const expectedDuration = recordingDuration / 1000
+    if (!(videoDuration >= expectedDuration)) {
       throw new assert.AssertionError({
         message: 'Recording does not have the expected length.',
-        actual: videoLength,
-        expected: expectedLength,
+        actual: videoDuration,
+        expected: expectedDuration,
         operator: '>='
       })
     }
