@@ -116,6 +116,12 @@ function recordScreen (fileName, options) {
   let connectOutput
   let waitForDeviceOutput
   let recordingProcess
+  /**
+   * Executes the recording process.
+   *
+   * @param {Function} resolve Success callback
+   * @param {Function} reject Failure callback
+   */
   function recordingExecutor (resolve, reject) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
     recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
@@ -132,9 +138,18 @@ function recordScreen (fileName, options) {
       }, opts.pullDelay)
     })
   }
+  /**
+   * Stops the recording process.
+   */
   function stop () {
     if (recordingProcess) recordingProcess.kill('SIGINT')
   }
+  /**
+   * Pulls the recording file from the Android device.
+   *
+   * @param {Result} result Result object
+   * @returns {Promise<Result>} Promise resolving with a Result object
+   */
   function pullFile (result) {
     // Retrieve the file via `adb pull -a remoteFile localFile`:
     const args = adbArgs.concat(['pull', '-a', deviceFileName, fileName])
@@ -147,6 +162,12 @@ function recordScreen (fileName, options) {
       }
     })
   }
+  /**
+   * Deletes the recording file from the Android device.
+   *
+   * @param {Result} result Result object
+   * @returns {Promise<Result>} Promise resolving with a Result object
+   */
   function deleteFile (result) {
     // Delete the file from the Android device and broadcast the file change:
     const file = deviceFileName

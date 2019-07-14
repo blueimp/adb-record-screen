@@ -14,10 +14,22 @@ const mochaSlow = 10000
 const videoFile = '/tmp/test.mp4'
 const recordingDuration = 2000
 
+/**
+ * Checks the integrity of the given video file.
+ *
+ * @param {string} videoFile File path to the video file
+ * @returns {Promise} Resolves for a valid file, rejects otherwise
+ */
 function checkVideoIntegrity (videoFile) {
   return execFile('ffmpeg', ['-v', 'error', '-i', videoFile, '-f', 'null', '-'])
 }
 
+/**
+ * Checks the integrity of the given video file.
+ *
+ * @param {string} videoFile File path to the video file
+ * @returns {Promise<number>} Resolves with the duration (ms) of the video
+ */
 async function getVideoDuration (videoFile) {
   const result = await execFile('ffprobe', [
     '-v',
@@ -31,6 +43,12 @@ async function getVideoDuration (videoFile) {
   return Number(result.stdout.trim())
 }
 
+/**
+ * Starts a given main activity on the Android device.
+ *
+ * @param {...string} args Command line arguments
+ * @returns {Promise} Resolves if executed succesfully, rejects otherwise
+ */
 function startMainActivity (...args) {
   return execFile(
     'adb',
@@ -38,6 +56,11 @@ function startMainActivity (...args) {
   ).catch(error => console.error(error))
 }
 
+/**
+ * Opens Chrome on the Android device.
+ *
+ * @returns {Promise} Resolves if executed succesfully, rejects otherwise
+ */
 function openChrome () {
   return startMainActivity(
     '-n',
@@ -45,6 +68,11 @@ function openChrome () {
   )
 }
 
+/**
+ * Shows the home screen on the Android device.
+ *
+ * @returns {Promise} Resolves if executed succesfully, rejects otherwise
+ */
 function showHomeScreen () {
   return startMainActivity('-c', 'android.intent.category.HOME')
 }
