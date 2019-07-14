@@ -22,7 +22,7 @@ const execFilePromise = util.promisify(execFile)
  * @param {object} options ADB options
  * @param {string} [options.serial] Use device with given serial
  * @param {string} [options.transportID] Use device with given transport ID
- * @returns {Array<string>}
+ * @returns {Array<string>} List of ADB arguments
  */
 function buildADBArgs (options) {
   const args = []
@@ -46,7 +46,7 @@ function buildADBArgs (options) {
  * @param {string} [options.size] WIDTHxHEIGHT, defaults to device resolution
  * @param {number} [options.bitRate=4000000] Bits per second, default is 4Mbps
  * @param {number} [options.timeLimit=180] Time limit (s), maximum is 180
- * @returns {Array<string>}
+ * @returns {Array<string>} List of screenrecord arguments
  */
 function buildScreenRecordArgs (fileName, options) {
   const args = ['shell', 'screenrecord', '--verbose']
@@ -101,7 +101,7 @@ function buildScreenRecordArgs (fileName, options) {
  *
  * @param {string} fileName Output file name
  * @param {Options} [options] Screen recording options
- * @returns {Recording}
+ * @returns {Recording} Recording object
  */
 function recordScreen (fileName, options) {
   const opts = Object.assign(
