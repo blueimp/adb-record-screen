@@ -150,7 +150,18 @@ describe('screen recording', function () {
     // Start some activities, as without screen changes the video will be empty:
     setTimeout(openChrome, 0)
     setTimeout(showHomeScreen, recordingLength / 2)
-    await recording.promise
+    const result = await recording.promise
+    assert.strictEqual(result.stderr, '')
+    const lines = result.stdout.split('\n')
+    assert.ok(
+      lines[0].indexOf(process.env.ANDROID_HOST) !== -1,
+      'stdout starts with connect output'
+    )
+    const intent = 'android.intent.action.MEDIA_SCANNER_SCAN_FILE'
+    assert.ok(
+      result.stdout.indexOf(intent) !== -1,
+      'stdout contains broadcasted intent'
+    )
     await checkVideoIntegrity(videoFile)
     const videoLength = await getVideoLength(videoFile)
     const expectedLength = recordingLength / 1000
