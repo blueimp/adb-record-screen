@@ -20,7 +20,7 @@ const recordingDuration = 2000
  * @param {string} videoFile File path to the video file
  * @returns {Promise} Resolves for a valid file, rejects otherwise
  */
-function checkVideoIntegrity (videoFile) {
+function checkVideoIntegrity(videoFile) {
   return execFile('ffmpeg', ['-v', 'error', '-i', videoFile, '-f', 'null', '-'])
 }
 
@@ -30,7 +30,7 @@ function checkVideoIntegrity (videoFile) {
  * @param {string} videoFile File path to the video file
  * @returns {Promise<number>} Resolves with the duration (ms) of the video
  */
-async function getVideoDuration (videoFile) {
+async function getVideoDuration(videoFile) {
   const result = await execFile('ffprobe', [
     '-v',
     'error',
@@ -49,11 +49,11 @@ async function getVideoDuration (videoFile) {
  * @param {...string} args Command line arguments
  * @returns {Promise} Resolves if executed succesfully, rejects otherwise
  */
-function startMainActivity (...args) {
+function startMainActivity(...args) {
   return execFile(
     'adb',
     ['shell', 'am', 'start', '-a', 'android.intent.action.MAIN'].concat(args)
-  ).catch(error => console.error(error))
+  ).catch(error => console.error(error)) // eslint-disable-line no-console
 }
 
 /**
@@ -61,7 +61,7 @@ function startMainActivity (...args) {
  *
  * @returns {Promise} Resolves if executed succesfully, rejects otherwise
  */
-function openChrome () {
+function openChrome() {
   return startMainActivity(
     '-n',
     'com.android.chrome/com.google.android.apps.chrome.Main'
@@ -73,19 +73,19 @@ function openChrome () {
  *
  * @returns {Promise} Resolves if executed succesfully, rejects otherwise
  */
-function showHomeScreen () {
+function showHomeScreen() {
   return startMainActivity('-c', 'android.intent.category.HOME')
 }
 
-describe('screen recording', function () {
+describe('screen recording', function() {
   this.timeout(mochaTimeout)
   this.slow(mochaSlow)
 
-  after(function () {
+  after(function() {
     fs.unlinkSync(videoFile)
   })
 
-  it('uses default options', async function () {
+  it('uses default options', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0
     })
@@ -96,7 +96,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: serial', async function () {
+  it('handles option: serial', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       serial: 'banana'
@@ -108,7 +108,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: transportID', async function () {
+  it('handles option: transportID', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       transportID: 'banana'
@@ -120,7 +120,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: bugreport', async function () {
+  it('handles option: bugreport', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       bugreport: true
@@ -132,7 +132,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: size', async function () {
+  it('handles option: size', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       size: '1x1'
@@ -144,7 +144,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: bitRate', async function () {
+  it('handles option: bitRate', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       bitRate: 400
@@ -156,7 +156,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('handles option: timeLimit', async function () {
+  it('handles option: timeLimit', async function() {
     const recording = recordScreen(videoFile, {
       waitTimeout: 0,
       timeLimit: 9
@@ -168,7 +168,7 @@ describe('screen recording', function () {
     )
   })
 
-  it('records screen', async function () {
+  it('records screen', async function() {
     // Touch the file name to check if it can override existing files:
     fs.closeSync(fs.openSync(videoFile, 'w'))
     const recording = recordScreen(videoFile, {

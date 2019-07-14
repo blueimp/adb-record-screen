@@ -24,7 +24,7 @@ const execFilePromise = util.promisify(execFile)
  * @param {string} [options.transportID] Use device with given transport ID
  * @returns {Array<string>} List of ADB arguments
  */
-function buildADBArgs (options) {
+function buildADBArgs(options) {
   const args = []
   if (options.serial) {
     // Select the device with the given serial:
@@ -48,7 +48,7 @@ function buildADBArgs (options) {
  * @param {number} [options.timeLimit=180] Time limit (s), maximum is 180
  * @returns {Array<string>} List of screenrecord arguments
  */
-function buildScreenRecordArgs (fileName, options) {
+function buildScreenRecordArgs(fileName, options) {
   const args = ['shell', 'screenrecord', '--verbose']
   if (options.bugreport) {
     // Adds additional information to the video, such as a timestamp overlay:
@@ -103,7 +103,7 @@ function buildScreenRecordArgs (fileName, options) {
  * @param {Options} [options] Screen recording options
  * @returns {Recording} Recording object
  */
-function recordScreen (fileName, options) {
+function recordScreen(fileName, options) {
   const opts = Object.assign(
     {
       port: 5555,
@@ -125,9 +125,9 @@ function recordScreen (fileName, options) {
    * @param {Function} resolve Success callback
    * @param {Function} reject Failure callback
    */
-  function recordingExecutor (resolve, reject) {
+  function recordingExecutor(resolve, reject) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
-    recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
+    recordingProcess = execFile('adb', args, function(error, stdout, stderr) {
       recordingProcess = null
       // @ts-ignore Error interface does not expose killed property
       if (error && !error.killed) return reject(error)
@@ -138,7 +138,7 @@ function recordScreen (fileName, options) {
       }
       // Add a delay before resolving, as pulling the video file directly after
       // terminating the recording process leads to corrupted files:
-      setTimeout(function () {
+      setTimeout(function() {
         resolve(result)
       }, opts.pullDelay)
     })
@@ -146,7 +146,7 @@ function recordScreen (fileName, options) {
   /**
    * Stops the recording process.
    */
-  function stop () {
+  function stop() {
     if (recordingProcess) recordingProcess.kill('SIGINT')
   }
   /**
@@ -155,10 +155,10 @@ function recordScreen (fileName, options) {
    * @param {Result} result Result object
    * @returns {Promise<Result>} Promise resolving with a Result object
    */
-  function pullFile (result) {
+  function pullFile(result) {
     // Retrieve the file via `adb pull -a remoteFile localFile`:
     const args = adbArgs.concat(['pull', '-a', deviceFileName, fileName])
-    return execFilePromise('adb', args).then(function (nextResult) {
+    return execFilePromise('adb', args).then(function(nextResult) {
       // Combine the output data:
       return {
         // Remove the lines displaying download percentage from stdout:
@@ -173,13 +173,13 @@ function recordScreen (fileName, options) {
    * @param {Result} result Result object
    * @returns {Promise<Result>} Promise resolving with a Result object
    */
-  function deleteFile (result) {
+  function deleteFile(result) {
     // Delete the file from the Android device and broadcast the file change:
     const file = deviceFileName
     const action = 'android.intent.action.MEDIA_SCANNER_SCAN_FILE'
     const cmd = `rm ${file} && am broadcast -a ${action} -d file://${file}`
     const args = adbArgs.concat(['shell', cmd])
-    return execFilePromise('adb', args).then(function (nextResult) {
+    return execFilePromise('adb', args).then(function(nextResult) {
       // Combine the output data:
       return {
         stdout: result.stdout + nextResult.stdout,
