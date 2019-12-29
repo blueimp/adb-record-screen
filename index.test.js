@@ -2,6 +2,14 @@
 
 /* global describe, after, it */
 
+/**
+ * @typedef {object} MetaData Video stream meta data
+ * @property {number} duration Video duration
+ * @property {number} width Video width
+ * @property {number} height Video height
+ * @property {number} rotate Video rotation value
+ */
+
 const assert = require('assert')
 const fs = require('fs')
 const execFile = require('util').promisify(require('child_process').execFile)
@@ -27,19 +35,26 @@ function checkVideoIntegrity(videoFile) {
  * Checks the integrity of the given video file.
  *
  * @param {string} videoFile File path to the video file
- * @returns {Promise<number>} Resolves with the duration (ms) of the video
+ * @returns {Promise<MetaData>} Resolves with the video meta data
  */
-async function getVideoDuration(videoFile) {
+async function getVideoMetaData(videoFile) {
   const result = await execFile('ffprobe', [
     '-v',
     'error',
     '-show_entries',
-    'format=duration',
+    'format=duration:stream=width,height:stream_tags=rotate',
     '-of',
-    'default=noprint_wrappers=1:nokey=1',
+    'json',
     videoFile
   ])
-  return Number(result.stdout.trim())
+  const parsedResult = JSON.parse(result.stdout)
+  const rotate = parsedResult.streams[0].tags.rotate
+  return {
+    duration: Number(parsedResult.format.duration),
+    width: parsedResult.streams[0].width,
+    height: parsedResult.streams[0].height,
+    rotate: rotate === undefined ? rotate : Number(rotate)
+  }
 }
 
 /**
@@ -190,13 +205,29 @@ describe('screen recording', function() {
       'stdout contains broadcasted intent'
     )
     await checkVideoIntegrity(videoFile)
-    const videoDuration = await getVideoDuration(videoFile)
+    const metaData = await getVideoMetaData(videoFile)
     const expectedDuration = recordingDuration / 1000
-    if (!(videoDuration >= expectedDuration)) {
+    if (!(metaData.duration >= expectedDuration)) {
       throw new assert.AssertionError({
         message: 'Recording does not have the expected length.',
-        actual: videoDuration,
+        actual: metaData.duration,
         expected: expectedDuration,
+        operator: '>='
+      })
+    }
+    if (!(metaData.width >= 320)) {
+      throw new assert.AssertionError({
+        message: 'Recording does not have the expected resolution width.',
+        actual: metaData.width,
+        expected: 320,
+        operator: '>='
+      })
+    }
+    if (!(metaData.width >= 480)) {
+      throw new assert.AssertionError({
+        message: 'Recording does not have the expected resolution height.',
+        actual: metaData.width,
+        expected: 480,
         operator: '>='
       })
     }
