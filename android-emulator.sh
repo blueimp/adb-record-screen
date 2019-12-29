@@ -74,22 +74,22 @@ create_avd() {
   echo 'Virtual Device created.'
 }
 
-is_boot_completed() {
-  test "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1
-}
-
-has_avd_arg() {
+has_arg() {
   while test $# -gt 0; do
-    test "$1" = -avd && return 0
+    test "$1" = "$ARG" && return 0
     shift
   done
   return 1
 }
 
+has_system_prop() {
+  test "$(adb shell getprop "$1" | tr -d '\r')" = "$2"
+}
+
 wait_for_device() {
   echo 'Waiting for device to be ready ...'
   adb wait-for-device
-  while ! is_boot_completed; do
+  while ! has_system_prop sys.boot_completed 1; do
     sleep 1
   done
   echo 'Device ready.'
@@ -116,7 +116,7 @@ if [ "$1" = -- ]; then
   shift
 fi
 
-if ! has_avd_arg "$@"; then
+if ! ARG=-avd has_arg "$@"; then
   if [ -z "$(get_avd)" ]; then
     create_avd "$(get_image)"
   fi
