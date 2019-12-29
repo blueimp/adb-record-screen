@@ -10,6 +10,32 @@
 
 'use strict'
 
+/**
+ * @typedef {object} Result
+ * @property {string} stdout Screen recording standard output
+ * @property {string} stderr Screen recording error output
+ */
+
+/**
+ * @typedef {object} Recording
+ * @property {Promise<Result>} promise Promise for the active screen recording
+ * @property {Function} stop Function to stop the screen recording
+ */
+
+/**
+ * @typedef {object} Options Screen recording options
+ * @property {string} [serial] Use device with given serial
+ * @property {string} [transportID] Use device with given transport ID
+ * @property {string} [hostname] Android device hostname
+ * @property {number} [port=5555] Android device port
+ * @property {number} [waitTimeout=5000] Device wait timeout (ms)
+ * @property {boolean} [bugreport] If `true` adds additional info to the video
+ * @property {string} [size] WIDTHxHEIGHT, defaults to native device resolution
+ * @property {number} [bitRate=4000000] Bits per second, default is 4Mbps
+ * @property {number} [timeLimit=180] Time limit (s), maximum is 180 (3 mins)
+ * @property {number} [pullDelay=200] Delay (ms) before pulling the video file
+ */
+
 const { execFile, execFileSync } = require('child_process')
 const crypto = require('crypto')
 const util = require('util')
@@ -68,32 +94,6 @@ function buildScreenRecordArgs(fileName, options) {
   args.push(fileName)
   return args
 }
-
-/**
- * @typedef {object} Result
- * @property {string} stdout Screen recording standard output
- * @property {string} stderr Screen recording error output
- */
-
-/**
- * @typedef {object} Recording
- * @property {Promise<Result>} promise Promise for the active screen recording
- * @property {Function} stop Function to stop the screen recording
- */
-
-/**
- * @typedef {object} Options Screen recording options
- * @property {string} [serial] Use device with given serial
- * @property {string} [transportID] Use device with given transport ID
- * @property {string} [hostname] Android device hostname
- * @property {number} [port=5555] Android device port
- * @property {number} [waitTimeout=5000] Device wait timeout (ms)
- * @property {boolean} [bugreport] If `true` adds additional info to the video
- * @property {string} [size] WIDTHxHEIGHT, defaults to native device resolution
- * @property {number} [bitRate=4000000] Bits per second, default is 4Mbps
- * @property {number} [timeLimit=180] Time limit (s), maximum is 180 (3 mins)
- * @property {number} [pullDelay=200] Delay (ms) before pulling the video file
- */
 
 /**
  * Starts a screen recording via adb shell screenrecord.
