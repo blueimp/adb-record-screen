@@ -188,10 +188,10 @@ describe('screen recording', function() {
     const recording = recordScreen(videoFile, {
       hostname: process.env.ANDROID_HOST
     })
-    setTimeout(() => recording.stop(), recordingDuration + 500)
     // Start some activities, as without screen changes the video will be empty:
-    setTimeout(openChrome, 0)
+    setTimeout(openChrome, recordingDuration / 4)
     setTimeout(showHomeScreen, recordingDuration / 2)
+    setTimeout(() => recording.stop(), recordingDuration + 500)
     const result = await recording.promise
     assert.strictEqual(result.stderr, '')
     const lines = result.stdout.split('\n')
