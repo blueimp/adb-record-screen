@@ -128,7 +128,6 @@ function recordScreen(fileName, options) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
     recordingProcess = execFile('adb', args, function(error, stdout, stderr) {
       recordingProcess = null
-      // @ts-ignore Error interface does not expose killed property
       if (error && !error.killed) return reject(error)
       const result = {
         // Combine the output data:
