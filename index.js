@@ -126,7 +126,7 @@ function recordScreen(fileName, options) {
    */
   function recordingExecutor(resolve, reject) {
     // Start the recording via `adb shell screenrecord [options] localFile`:
-    recordingProcess = execFile('adb', args, function(error, stdout, stderr) {
+    recordingProcess = execFile('adb', args, function (error, stdout, stderr) {
       recordingProcess = null
       if (error && !error.killed) return reject(error)
       const result = {
@@ -136,7 +136,7 @@ function recordScreen(fileName, options) {
       }
       // Add a delay before resolving, as pulling the video file directly after
       // terminating the recording process leads to corrupted files:
-      setTimeout(function() {
+      setTimeout(function () {
         resolve(result)
       }, opts.pullDelay)
     })
@@ -156,7 +156,7 @@ function recordScreen(fileName, options) {
   function pullFile(result) {
     // Retrieve the file via `adb pull -a remoteFile localFile`:
     const args = adbArgs.concat(['pull', '-a', deviceFileName, fileName])
-    return execFilePromise('adb', args).then(function(nextResult) {
+    return execFilePromise('adb', args).then(function (nextResult) {
       // Combine the output data:
       return {
         // Remove the lines displaying download percentage from stdout:
@@ -177,7 +177,7 @@ function recordScreen(fileName, options) {
     const action = 'android.intent.action.MEDIA_SCANNER_SCAN_FILE'
     const cmd = `rm ${file} && am broadcast -a ${action} -d file://${file}`
     const args = adbArgs.concat(['shell', cmd])
-    return execFilePromise('adb', args).then(function(nextResult) {
+    return execFilePromise('adb', args).then(function (nextResult) {
       // Combine the output data:
       return {
         stdout: result.stdout + nextResult.stdout,
