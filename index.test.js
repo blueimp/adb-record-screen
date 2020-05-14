@@ -10,7 +10,8 @@
  * @property {number} rotate Video rotation value
  */
 
-const assert = require('assert')
+/** @type {object} */
+const assert = require('assert').strict
 const fs = require('fs')
 const execFile = require('util').promisify(require('child_process').execFile)
 const recordScreen = require('.')
