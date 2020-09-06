@@ -1,6 +1,6 @@
 {
   "name": "adb-record-screen",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "title": "adb record screen",
   "description": "Screen recording function using Android Debug Bridge (adb).",
   "keywords": [
