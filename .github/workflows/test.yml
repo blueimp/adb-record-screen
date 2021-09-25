@@ -7,15 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 12.x
-      - name: npm install
-        run: npm install
-        env:
-          CI: true
-      - name: npm run pretest
-        run: npm run pretest
-        env:
-          CI: true
+          node-version: 16
+      - run: npm install
+      - run: npm run pretest
