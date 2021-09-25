@@ -1,16 +1,14 @@
-FROM alpine:3.12
-
-RUN echo '@edgetesting http://dl-cdn.alpinelinux.org/alpine/edge/testing' \
-  >> /etc/apk/repositories
+FROM alpine:3.14
 
 RUN apk --no-cache add \
+  tini \
   nodejs \
   npm \
   ffmpeg \
-  android-tools@edgetesting \
+  android-tools \
   && npm install -g \
   npm@latest \
-  mocha@8 \
+  mocha@9 \
   # Clean up obsolete files:
   && rm -rf \
   /tmp/* \
@@ -22,8 +20,8 @@ RUN adduser -D -u 1000 mocha
 
 USER mocha
 
-WORKDIR /opt
+WORKDIR /app
 
 COPY wait-for-hosts.sh /usr/local/bin/wait-for-hosts
 
-ENTRYPOINT ["wait-for-hosts", "--", "mocha"]
+ENTRYPOINT ["tini", "-g", "--", "wait-for-hosts", "--", "mocha"]
